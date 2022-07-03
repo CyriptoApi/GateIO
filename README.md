@@ -2,6 +2,9 @@
 ```
     This coding is only for Gate Io v4
 ```
+```PHP
+$API = new GateIO($key, $secret);
+```
 - # Create Order orderCreate()
 ```PHP
     $API->orderCreate('SHIB_USDT', 1000000, "0.000019941",'sell')
