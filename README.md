@@ -1,6 +1,10 @@
 # GateIO PHP API Document.
 ```
-    This coding is only for Gate Io v4
+ - Author: Barış Demir github.com/barisdemir49 
+ - Web Site: botcex.com
+ - GateIO V4: https://www.gate.io/docs/developers/apiv4/en/#spot
+ - This coding is only for Gate Io v4
+
 ```
 ```PHP
 $API = new GateIO($key, $secret);
