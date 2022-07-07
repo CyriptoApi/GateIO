@@ -28,6 +28,15 @@ class GateIO
         $this->curlUrl = $this->host . $this->version;
     }
 
+    private function reset()
+    {
+        $this->header = [];
+        $this->que = [];
+        $this->version = "/api/v4";
+        $this->curlUrl = $this->host . $this->version;
+        $this->sign = "";
+        $this->path = "";
+    }
     private function createSignkey()
     {
         $fmt = "%s\n%s\n%s\n%s\n%s";
@@ -61,10 +70,11 @@ class GateIO
             CURLOPT_CUSTOMREQUEST => $this->type,
             CURLOPT_HTTPHEADER => $this->headers,
             CURLOPT_POSTFIELDS => $this->type == 'POST' ? json_encode($this->que) : http_build_query($this->que, '', '&'),
-            CURLOPT_VERBOSE => 1,
+            CURLOPT_VERBOSE => 0,
         ));
         $response = curl_exec($curl);
         curl_close($curl);
+        $this->reset();
         return json_decode($response);
     }
 
@@ -78,7 +88,8 @@ class GateIO
             'amount' => $amount,
             'price' => $price,
             'type' => 'limit',
-            'account' => 'spot'
+            'account' => 'spot',
+            'text' => 't-101'
         );
         $this->path = '/spot/orders';
         $this->type = 'POST';
@@ -122,11 +133,14 @@ class GateIO
     }
 
     /** Get Finished Orders */
-    function getFinishedOrders()
+    function getFinishedOrders(string $symbol = null, $limit = 100)
     {
         $this->que = array(
-            'status' => 'finished'
+            'status' => 'finished',
+            'limit' => $limit
         );
+        if ($symbol)
+            $this->que['currency_pair'] = strtoupper($symbol);
         $this->path = '/spot/orders/';
         $this->type = 'GET';
         $this->createSignkey();
